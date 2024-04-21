@@ -1,9 +1,10 @@
 const express = require("express")
+import { Request, Response } from "express"
 const app = express()
 const port = 8000
 const { add, subtract, division, multiplication } = require("./utils")
 
-app.get("/calculate/:operation/:n1/:n2", (req: any, res: any) => {
+app.get("/calculate/:operation/:n1/:n2", (req: Request, res: Response) => {
   const operation = req.params.operation
   const num1 = req.params.n1
   const num2 = req.params.n2
