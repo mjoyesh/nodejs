@@ -1,10 +1,7 @@
-const express = require("express")
 import { Request, Response } from "express"
-const app = express()
-const port = 8000
-const { add, subtract, division, multiplication } = require("./utils")
+const { add, subtract, division, multiplication } = require("../utils")
 
-app.get("/calculate/:operation/:n1/:n2", (req: Request, res: Response) => {
+exports.getCalculationResult = (req: Request, res: Response) => {
   const operation = req.params.operation
   const num1 = req.params.n1
   const num2 = req.params.n2
@@ -31,9 +28,8 @@ app.get("/calculate/:operation/:n1/:n2", (req: Request, res: Response) => {
       result = "Something went wrong!"
   }
 
-  res.json(result)
-})
-
-app.listen(port, () => {
-  console.log(`Server is running on PORT ${port}`)
-})
+  return res.status(200).json({
+    status: "success",
+    result
+  })
+}

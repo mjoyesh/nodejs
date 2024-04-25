@@ -1,4 +1,4 @@
-const { add, subtract, division, multiplication } = require("./utils")
+const { add, subtract, division, multiplication } = require("../utils")
 
 describe("Addition Test", () => {
   test("Addition of 2 numbers", () => {
