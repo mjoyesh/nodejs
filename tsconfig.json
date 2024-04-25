@@ -8,8 +8,7 @@
     "moduleResolution": "node",
     "baseUrl": "./",
     "outDir": "./dist",
-    "sourceMap": true,
-    "moduleDetection": "force"
+    "sourceMap": true
   },
   "include": ["src/*.ts", "src/__tests__/arithmetic.test.ts"],
   "exclude": ["node_modules"]

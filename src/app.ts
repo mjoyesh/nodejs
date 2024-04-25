@@ -1,9 +1,12 @@
-const express = require("express")
+import express from "express"
 const app = express()
 
 app.use(express.json())
 
-const arithmeticCalRouter = require("./routes/arithmeticRoutes")
-app.use("/calculate", arithmeticCalRouter)
+const arithmeticCalRoute = require("./routes/arithmeticRoutes")
+app.use("/calculate", arithmeticCalRoute)
+
+const fileReadWriteRoute = require("./routes/readWriteFileRoutes")
+app.use("/file", fileReadWriteRoute)
 
 module.exports = app

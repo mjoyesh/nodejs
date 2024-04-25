@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 const { add, subtract, division, multiplication } = require("../utils")
 
-exports.getCalculationResult = (req: Request, res: Response) => {
+export const getCalculationResult = (req: Request, res: Response) => {
   const operation = req.params.operation
   const num1 = req.params.n1
   const num2 = req.params.n2
@@ -28,7 +28,7 @@ exports.getCalculationResult = (req: Request, res: Response) => {
       result = "Something went wrong!"
   }
 
-  return res.status(200).json({
+  res.status(200).json({
     status: "success",
     result
   })
