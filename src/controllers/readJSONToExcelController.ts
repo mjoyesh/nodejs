@@ -1,5 +1,5 @@
-const fs = require("fs")
-const ExcelJS = require("exceljs")
+import fs from "fs"
+import ExcelJS from "exceljs"
 import path from "path"
 
 interface RowInterface {
@@ -12,7 +12,7 @@ interface RowInterface {
   rating: any
 }
 
-export const convertJSONtoExcel = () => {
+export const convertJSONtoExcel = async () => {
   const json_file_path = path.join(__dirname, "../files/sample_data.json")
   const excel_file_path = path.join(__dirname, "../files/sample_data.xlsx")
   const json_data = JSON.parse(fs.readFileSync(json_file_path, "utf8"))
@@ -32,8 +32,9 @@ export const convertJSONtoExcel = () => {
       worksheet.addRow(rowData)
     })
 
-    return workbook.xlsx.writeFile(excel_file_path)
+    await workbook.xlsx.writeFile(excel_file_path)
   } catch (err) {
     console.log("Something went wrong!")
+    throw err
   }
 }
