@@ -43,7 +43,7 @@ export async function migrateController(
   next: NextFunction
 ) {
   const userId = req.query.userId as string
-  if (userId !== "authorized_user") {
+  if (userId !== "mjoyesh") {
     return next(new Error("Unauthorized user"))
   }
 
