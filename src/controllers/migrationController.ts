@@ -4,6 +4,32 @@ import { Request, Response, NextFunction } from "express"
 import * as admin from "firebase-admin"
 import path from "path"
 
+export async function writeMigrationLog(log: any): Promise<void> {
+  const logFilePath = path.resolve(__dirname, "../../migration.log")
+  const logData = JSON.stringify(log, null, 2)
+
+  fs.appendFile(logFilePath, logData + "\n", (err) => {
+    if (err) {
+      console.error("Error writing migration log:", err)
+    } else {
+      console.log("Migration log has been written successfully.")
+    }
+  })
+}
+
+export function checkAuthorization(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void {
+  const userId = req.query.userId as string
+  if (userId !== "authorized_user") {
+    next(new Error("Unauthorized user"))
+  } else {
+    next()
+  }
+}
+
 const serviceAccount = require("../firebase/serviceAccountKey.json")
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -15,7 +41,7 @@ export async function migrateController(
   req: Request,
   res: Response,
   next: NextFunction
-): Promise<void> {
+) {
   const userId = req.query.userId as string
   if (userId !== "authorized_user") {
     return next(new Error("Unauthorized user"))
@@ -67,30 +93,4 @@ export async function migrateController(
       })
       .write(data)
   })
-}
-
-export async function writeMigrationLog(log: any): Promise<void> {
-  const logFilePath = path.resolve(__dirname, '../../migration.log')
-  const logData = JSON.stringify(log, null, 2)
-
-  fs.appendFile(logFilePath, logData + '\n', (err) => {
-    if (err) {
-      console.error('Error writing migration log:', err);
-    } else {
-      console.log('Migration log has been written successfully.');
-    }
-  });
-}
-
-export function checkAuthorization(
-  req: Request,
-  res: Response,
-  next: NextFunction
-): void {
-  const userId = req.query.userId as string
-  if (userId !== "authorized_user") {
-    next(new Error("Unauthorized user"))
-  } else {
-    next()
-  }
 }
