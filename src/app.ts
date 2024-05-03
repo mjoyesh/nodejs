@@ -12,4 +12,7 @@ app.use("/file", fileReadWriteRoute)
 const JSONtoExcelRoute = require("./routes/readJSONToExcelRoutes")
 app.use("/file", JSONtoExcelRoute)
 
+const migrationRoute = require("./routes/migrationRoutes")
+app.use("/file", migrationRoute)
+
 module.exports = app

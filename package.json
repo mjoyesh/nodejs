@@ -12,7 +12,8 @@
   "dependencies": {
     "csv-parser": "^3.0.0",
     "exceljs": "^4.4.0",
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "firebase-admin": "^12.1.0"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
