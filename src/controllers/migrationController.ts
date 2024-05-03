@@ -23,7 +23,7 @@ export function checkAuthorization(
   next: NextFunction
 ): void {
   const userId = req.query.userId as string
-  if (userId !== "authorized_user") {
+  if (userId !== "mjoyesh") {
     next(new Error("Unauthorized user"))
   } else {
     next()
