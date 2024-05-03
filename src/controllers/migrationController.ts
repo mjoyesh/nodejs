@@ -68,6 +68,16 @@ export async function migrateController(
         try {
           await firestore.collection(collectionName).add(row)
           migratedCount++
+          await writeMigrationLog({
+            fileName: migrationFileName,
+            filePath: csvFilePath,
+            migrationTriggeredBy,
+            migratedCount,
+            skippedCount,
+            errors,
+          })
+          console.log("Migration completed successfully.")
+          res.send("Migration completed successfully.")
         } catch (error: any) {
           errors.push({
             row: migratedCount + skippedCount + 1,
@@ -78,18 +88,6 @@ export async function migrateController(
       })
       .on("error", (error) => {
         next(error)
-      })
-      .on("end", async () => {
-        await writeMigrationLog({
-          fileName: migrationFileName,
-          filePath: csvFilePath,
-          migrationTriggeredBy,
-          migratedCount,
-          skippedCount,
-          errors,
-        })
-        console.log("Migration completed successfully.")
-        res.send("Migration completed successfully.")
       })
       .write(data)
   })
