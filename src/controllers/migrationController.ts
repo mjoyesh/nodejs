@@ -31,9 +31,11 @@ export function checkAuthorization(
 }
 
 const serviceAccount = require("../firebase/serviceAccountKey.json")
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-})
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+  }) 
+}
 
 const firestore = admin.firestore()
 
