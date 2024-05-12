@@ -30,7 +30,7 @@ export function checkAuthorization(
   }
 }
 
-const serviceAccount = require("../firebase/serviceAccountKey.json")
+const serviceAccount = require("../firebase/migrationServiceAccountKey.json")
 if (!admin.apps.length) {
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),

@@ -1,6 +1,9 @@
 const firebase = require("firebase-admin")
-const serviceAccount = require("../firebase/serviceAccountKey.json")
+const serviceAccount = require("../firebase/uploadFileServiceAccountKey.json")
 const multer = require("multer")
+const dotenv = require("dotenv")
+
+dotenv.config({ path: "./config.env" })
 
 if (!firebase.apps.length) {
   firebase.initializeApp({
@@ -8,7 +11,7 @@ if (!firebase.apps.length) {
   })
 }
 
-const bucketName = "upload-file-67cf7.appspot.com"
+const bucketName = process.env.UPLOAD_FILE_FIREBASE_BUCKET
 const bucket = firebase.storage().bucket(bucketName)
 
 const upload = multer({
