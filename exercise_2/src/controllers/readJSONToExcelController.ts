@@ -12,7 +12,7 @@ interface RowInterface {
   rating: any
 }
 
-export const convertJSONtoExcel = async () => {
+export const convertJSONtoExcel = async (req: any, res: any) => {
   const json_file_path = path.join(__dirname, "../files/sample_data.json")
   const excel_file_path = path.join(__dirname, "../files/sample_data.xlsx")
   const json_data = JSON.parse(fs.readFileSync(json_file_path, "utf8"))
@@ -33,6 +33,9 @@ export const convertJSONtoExcel = async () => {
     })
 
     await workbook.xlsx.writeFile(excel_file_path)
+    res.status(200).send({
+      message: "Workbook created successfully!"
+    })
   } catch (err) {
     console.log("Something went wrong!")
     throw err

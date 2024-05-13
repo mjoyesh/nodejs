@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "strict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
+    "baseUrl": "./",
+    "outDir": "./dist",
+    "sourceMap": true,
+    "moduleDetection": "force"
+  },
+  "include": ["src/*.ts", "src/__tests__/arithmetic.test.ts"],
+  "exclude": ["node_modules"]
+}
