@@ -18,7 +18,16 @@ app.use("/file", JSONtoExcelRoute)
 const migrationRoute = require("./routes/migrationRoutes")
 app.use("/file", migrationRoute)
 
-const uploadFileRoute = require("./routes/uploadFileRoutes")
-app.use("/file", uploadFileRoute)
+// const uploadFileRoute = require("./routes/uploadFileRoutes")
+// app.use("/file", uploadFileRoute)
+
+const authRoutes = require('./routes/authRoutes')
+app.use("/auth", authRoutes)
+
+const fileRoutes = require('./routes/fileRoutes')
+app.use("/file", fileRoutes)
+
+const uploadLogRoutes = require('./routes/uploadLogRoutes')
+app.use("/uploadLog", uploadLogRoutes)
 
 module.exports = app
