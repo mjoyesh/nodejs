@@ -9,8 +9,10 @@
     "baseUrl": "./",
     "outDir": "./dist",
     "sourceMap": true,
-    "moduleDetection": "force"
+    "moduleDetection": "force",
+    "typeRoots": ["node_modules/@types"],
+    "types": ["node"]
   },
-  "include": ["src/*.ts", "src/__tests__/arithmetic.test.ts"],
+  "include": ["src/*.ts"],
   "exclude": ["node_modules"]
 }
