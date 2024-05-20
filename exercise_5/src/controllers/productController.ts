@@ -1,7 +1,9 @@
 const Product = require("../models/productSchema")
 const serviceAccount = require("../firebase/uploadFileServiceAccountKey.json")
 const firebase = require("firebase-admin");
-import { NextFunction } from "express"
+const { v4: uuidv4 } = require('uuid')
+const path = require('path');
+const mongoose = require("mongoose")
 
 if (!firebase.apps.length) {
   firebase.initializeApp({
@@ -9,25 +11,46 @@ if (!firebase.apps.length) {
   })
 }
 
+const bucketName = process.env.UPLOAD_FILE_FIREBASE_BUCKET
+const bucket = firebase.storage().bucket(bucketName)
+
+const uploadImage = async (file: any) => {
+  const fileName = `${uuidv4()}${path.extname(file.originalname)}`;
+  const fileUpload = bucket.file(fileName);
+
+  await fileUpload.save(file.buffer, {
+    metadata: {
+      contentType: file.mimetype,
+    },
+  });
+
+  const [url] = await fileUpload.getSignedUrl({
+    action: 'read',
+    expires: '03-01-2500', // Set an appropriate expiration date
+  });
+
+  return url;
+};
+
 const createProduct = async (req: any, res: any) => {
-  const storageRef = firebase.storage().ref();
+  const { name, description, price, quantity, category } = req.body;
   const file = req.file;
+  
+  if (!mongoose.Types.ObjectId.isValid(category)) {
+    return res.status(400).json({ message: 'Invalid category ID' });
+  }
 
   if (!file) {
     return res.status(400).json({ message: "Please upload a file" });
   }
 
-  const imageRef = storageRef.child("images/" + file.originalname);
-  const snapshot = await imageRef.put(file.buffer);
-
-  const imageUrl = await snapshot.ref.getDownloadURL();
-
+  const imageUrl = await uploadImage(file)
   const product = new Product({
-    name: req.body.name,
-    description: req.body.description,
-    price: req.body.price,
-    quantity: req.body.quantity,
-    category: req.body.category,
+    name,
+    description,
+    price,
+    quantity,
+    category,
     image: imageUrl,
   });
 
@@ -45,7 +68,25 @@ const createProduct = async (req: any, res: any) => {
 
 const getAllProducts = async(req: any, res: any) => {
   try {
-    const products = await Product.find().populate("category", "name")
+    const { name, category, priceMin, priceMax } = req.query
+    const filter: any = {}
+
+    if (name) {
+      filter.name = { $regex: name, $options: "i" } // i stand for case-insensitive search
+    }
+
+    if (category) {
+      filter.category = category
+    }
+
+    if (priceMin) {
+      filter.price = { ...filter.price, $gte: Number(priceMin) } // greater than equal to
+    }
+
+    if (priceMax) {
+      filter.price = { ...filter.price, $lte: Number(priceMax) }// less than equal to
+    }
+    const products = await Product.find(filter).populate("category", "name")
     res.status(200).json({
       status: "success",
       data: products
@@ -57,7 +98,7 @@ const getAllProducts = async(req: any, res: any) => {
   }
 }
 
-const getProductById = async(req: any, res: any, next: NextFunction) => {
+const getProductById = async(req: any, res: any) => {
   let product
   try {
     product = await Product.findById(req.params.id).populate("category", "name")
@@ -112,8 +153,10 @@ const updateProduct = async(req: any, res: any) => {
 
 const deleteProduct = async(req: any, res: any) => {
   try {
-    const product = await Product.findById(req.params.id)
-    await product.remove()
+    const product = await Product.findByIdAndDelete(req.params.id)
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
     res.status(200).json({
       status: "success",
       message: "Product deleted successfully!"

@@ -1,10 +1,21 @@
+const mongoose = require("mongoose")
 const Cart = require("../models/cartSchema")
+const Product = require("../models/productSchema")
 
 const addToCart = async (req: any, res: any) => {
-  const { productId } = req.body
+  const { productId, quantity } = req.body
   const userId = req.userId
 
   try {
+    if (!mongoose.Types.ObjectId.isValid(productId)) {
+      return res.status(400).json({ message: "Invalid product ID" })
+    }
+
+    const product = await Product.findById(productId)
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" })
+    }
+
     let cart = await Cart.findOne({ user: userId })
     if (!cart) {
       cart = new Cart({
@@ -12,24 +23,27 @@ const addToCart = async (req: any, res: any) => {
         products: [
           {
             product: productId,
+            quantity: quantity || 1,
           },
         ],
       })
       await cart.save()
-    }
-    const productIndex = cart.products.findIndex((item: any) => {
-      item.product.toString() === productId
-    })
-
-    if (productIndex !== -1) {
-      cart.products[productIndex].quantity++
     } else {
-      cart.products.push({ product: productId })
+      const productIndex = cart.products.findIndex(
+        (item: any) => item.product.toString() === productId
+      )
+
+      if (productIndex !== -1) {
+        cart.products[productIndex].quantity += quantity || 1
+      } else {
+        cart.products.push({ product: productId, quantity: quantity || 1 })
+      }
+
       await cart.save()
     }
     res.status(200).json({
       status: "success",
-      message: "Product added successfully!",
+      message: "Product added to cart successfully!",
     })
   } catch (err: any) {
     res.status(500).json({
@@ -85,7 +99,7 @@ const getCart = async (req: any, res: any) => {
     }
 
     res.status(200).json({
-      data: cart
+      data: cart,
     })
   } catch (error: any) {
     res.status(500).json({ message: error.message })
@@ -93,7 +107,7 @@ const getCart = async (req: any, res: any) => {
 }
 
 module.exports = {
-  getCart, 
-  removeFromCart, 
-  addToCart
+  getCart,
+  removeFromCart,
+  addToCart,
 }

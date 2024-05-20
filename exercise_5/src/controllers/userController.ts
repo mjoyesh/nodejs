@@ -2,6 +2,7 @@ const User = require("../models/userSchema")
 const bcrypt = require("bcrypt")
 const dotenv = require("dotenv")
 const jwt = require("jsonwebtoken")
+const { sendWelcomeEmail } = require("../services/emailService")
 
 dotenv.config({ path: "./config.env" })
 
@@ -17,6 +18,8 @@ const registerUser = async (req: any, res: any) => {
 
   try {
     const newUser = await user.save()
+    await sendWelcomeEmail(req.body.email)
+
     res.status(200).json({
       status: "success",
       message: "User created successfully",
@@ -72,7 +75,7 @@ const getUserProfile = async (req: any, res: any) => {
       })
     }
     res.status(200).json({
-      data: user
+      data: user,
     })
   } catch (err: any) {
     res.status(500).json({

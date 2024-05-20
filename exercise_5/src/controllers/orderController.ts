@@ -33,14 +33,14 @@ const placeOrder = async (req: any, res: any) => {
     await order.save()
     await Cart.findOneAndDelete({ user: userId })
     res.status(201).json({
-      message: "Order places successfully!",
+      message: "Order placed successfully!",
     })
   } catch (err: any) {
     res.status(500).json({ message: err.message })
   }
 }
 
-const getOrder = async (req, res) => {
+const getOrder = async (req: any, res: any) => {
   const userId = req.userId
   try {
     const orders = await Order.find({ user: userId }).populate(
@@ -53,4 +53,9 @@ const getOrder = async (req, res) => {
   } catch (err: any) {
     res.status(500).json({ message: err.message })
   }
+}
+
+module.exports = {
+  placeOrder,
+  getOrder,
 }
