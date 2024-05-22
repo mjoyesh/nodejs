@@ -11,6 +11,6 @@
     "sourceMap": true,
     "moduleDetection": "force"
   },
-  "include": ["src/*.ts", "src/__tests__/arithmetic.test.ts"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules"]
 }
