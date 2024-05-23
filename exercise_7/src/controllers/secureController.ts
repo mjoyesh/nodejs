@@ -4,6 +4,7 @@ const getProtectedData = (req: any, res: any) => {
     firstName: req.user.firstName,
     lastName: req.user.lastName,
     email: req.user.email,
+    username: req.user.username
   })
 }
 

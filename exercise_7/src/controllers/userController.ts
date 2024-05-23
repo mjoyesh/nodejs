@@ -1,7 +1,7 @@
 const User = require("../models/userSchema")
 const bcrypt = require("bcrypt")
 const dotenv = require("dotenv")
-const jwt = require("jsonwebtoken")
+// const jwt = require("jsonwebtoken")
 const { sendWelcomeEmail } = require("../services/emailService")
 const generateToken = require("../utils/generateToken")
 
@@ -9,11 +9,17 @@ dotenv.config({ path: "./config.env" })
 
 const registerUser = async (req: any, res: any) => {
   const hashedPassword = await bcrypt.hash(req.body.password, 10)
+  const { username, firstName, lastName, profilePicture, age, email, employment } =
+    req.body
 
   const user = new User({
-    username: req.body.username,
-    name: req.body.name,
-    email: req.body.email,
+    username,
+    firstName,
+    lastName,
+    profilePicture,
+    age,
+    email,
+    employment,
     password: hashedPassword,
   })
 
