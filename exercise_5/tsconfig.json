@@ -10,7 +10,7 @@
     "outDir": "./dist",
     "sourceMap": true,
     "moduleDetection": "force",
-    "typeRoots": ["node_modules/@types"],
+    // "typeRoots": ["node_modules/@types"],
     "types": ["node"]
   },
   "include": ["src/**/*"],
