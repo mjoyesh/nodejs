@@ -1,0 +1,32 @@
+extends layout
+
+block content
+  head
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js")
+    script.
+      document.addEventListener('DOMContentLoaded', async () => {
+        try {
+          const response = await axios.get('/homepage/displayProducts');
+          const products = response.data.data;
+          const productContainer = document.getElementById('product-list');
+          if (products.length) {
+            products.forEach(product => {
+              const productItem = document.createElement('li');
+              productItem.innerHTML = `
+                <h2>${product.name}</h2>
+                <p>Category: ${product.category}</p>
+                <p>Price: ${product.price}</p>
+              `;
+              productContainer.appendChild(productItem);
+            });
+          } else {
+            productContainer.innerHTML = '<p>No products available.</p>';
+          }
+        } catch (error) {
+          console.error('There was an error fetching the products!', error);
+        }
+      });
+
+  body
+    h1 Products List
+    ul#product-list

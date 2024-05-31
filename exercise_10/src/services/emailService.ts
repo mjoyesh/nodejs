@@ -63,4 +63,20 @@ const sendPromotionalEmail = async (userEmail: string, products: any) => {
   }
 }
 
-module.exports = { sendWelcomeEmail, sendPromotionalEmail }
+const sendVerificationEmail = async (userEmail: string, token: string) => {
+  const verificationUrl = `http://localhost:8000/auth/verify-email?token=${token}`
+  const mailOptions = {
+    from: `"Node Exercise" <${process.env.EMAIL_USER}>`,
+    to: userEmail,
+    subject: "Verify Your Email",
+    html: `<p>Please verify your email by clicking on the following link: <a href="${verificationUrl}">${verificationUrl}</a></p>`,
+  }
+
+  try {
+    await transporter.sendMail(mailOptions)
+  } catch (error: any) {
+    console.error("Error sending verification email", error)
+  }
+}
+
+module.exports = { sendWelcomeEmail, sendPromotionalEmail, sendVerificationEmail }

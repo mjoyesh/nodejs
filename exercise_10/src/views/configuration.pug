@@ -1,0 +1,36 @@
+extends layout
+
+block content
+  head
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js")
+    script.
+      document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('products-form');
+        form.addEventListener('submit', async (event) => {
+          event.preventDefault();
+          const formData = new FormData(form);
+          const data = Object.fromEntries(formData.entries());
+          try {
+            const response = await axios.post('/configuration', data);
+            form.reset();
+            alert(response.data.message);
+          } catch (error) {
+            console.error('There was an error!', error);
+            alert('An error occurred during registration.');
+          }
+        });
+      });
+  body
+    h1 Add Categories and Products
+    form#products-form
+      div
+        label(for='category') Category:
+        input(type='text', name='category', required)
+      div
+        label(for='name') Product Name:
+        input(type='text', name='name', required)
+      div
+        label(for='price') Price:
+        input(type='text', name='price', required)
+      div
+        button(type='submit') Add Product

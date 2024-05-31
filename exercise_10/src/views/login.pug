@@ -1,12 +1,33 @@
 extends layout
 
 block content
-    h1 Login
-    form(action='/auth/login', method='POST')
-        .form-group
-            label(for='username') Username
-            input.form-control(type='username', name='username', required)
-        .form-group
-            label(for='password') Password
-            input.form-control(type='password', name='password', required)
-        button.btn.btn-primary(type='submit') Login
+    head
+        script(src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js")
+        script.
+            document.addEventListener('DOMContentLoaded', () => {
+                const form = document.getElementById('login-form');
+                form.addEventListener('submit', async (event) => {
+                    event.preventDefault();
+                    const formData = new FormData(form);
+                    const data = Object.fromEntries(formData.entries());
+                    try {
+                        const response = await axios.post('/auth/login', data);
+                        form.reset();
+                        window.location.href = '/configure';
+                    } catch (error) {
+                        console.error('There was an error!', error);
+                        alert('An error occurred during login.');
+                    }
+                });
+            });
+    body
+        h1 Login
+        form#login-form
+            div
+                label(for='username') Username:
+                input(type='text', name='username', required)
+            div
+                label(for='password') Password:
+                input(type='password', name='password', required)
+            div
+                button(type='submit') Login User

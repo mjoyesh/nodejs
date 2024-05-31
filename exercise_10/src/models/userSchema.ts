@@ -15,29 +15,17 @@ const UserSchema = new Schema({
     type: String,
     required: true,
   },
-  profilePicture: {
-    type: String,
-  },
-  age: {
-    type: Number,
-  },
   email: {
     type: String,
     required: true,
     unique: true,
   },
-  employment: {
-    type: String,
-    enum: ["Public", "Private"],
-  },
   password: {
     type: String,
     required: true,
   },
-  date: {
-    type: Date,
-    default: Date.now,
-  },
+  isVerified: Boolean,
+  verificationToken: String,
 })
 
 module.exports = mongoose.model("users", UserSchema)
